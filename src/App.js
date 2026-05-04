@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { useEffect } from "react";
+import TaskInput from "./components/TaskInput";
+import TaskList from "./components/TaskList";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const[task, setTask] = useState("");
+  const[tasks,setTasks] = useState(() => {
+    const saved = localStorage.getItem("tasks");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const addTask = () => {
+    setTasks([...tasks, {text: task, completed: false}]);
+    setTask("");
+  }
+  const deleteTask = (index) => {
+    setTasks(tasks.filter((_,i) => i !== index))
+  };
+  const toggleTask = (index) => {
+    const updatedTasks = tasks.map((t,i) => {
+        if (i === index) {
+          return {...t, completed: !t.completed};
+        }
+        return t;
+    });
+    setTasks(updatedTasks);
+  };
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  return(
+    <div className="container">
+      <h1>To-Do App</h1>
+
+      <TaskInput
+        task = {task}
+        setTask = {setTask}
+        addTask = {addTask}
+      />
+
+      <TaskList
+        tasks={tasks}
+        toggleTask={toggleTask}
+        deleteTask={deleteTask}
+      />
     </div>
+
   );
 }
 
