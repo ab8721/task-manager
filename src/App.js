@@ -4,6 +4,7 @@ import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import "./App.css";
 import ReactGA from "react-ga4";
+import { Helmet } from "react-helmet-async";
 
 function App() {
   const[task, setTask] = useState("");
@@ -52,24 +53,45 @@ function App() {
     ReactGA.send("pageview");
   }, []);
 
-  return(
-    <div className="container">
+ return (
+  <div className="container">
+
+    <Helmet>
+      <title>React To-Do App | Task Manager</title>
+      <meta
+        name="description"
+        content="A simple and efficient task management app built with React. Create, track, and complete tasks easily."
+      />
+      <meta
+        name="keywords"
+        content="react todo app, task manager, productivity app"
+      />
+    </Helmet>
+
+    <header>
       <h1>To-Do App</h1>
+    </header>
 
-      <TaskInput
-        task = {task}
-        setTask = {setTask}
-        addTask = {addTask}
-      />
+    <main>
+      <section>
+        <TaskInput
+          task={task}
+          setTask={setTask}
+          addTask={addTask}
+        />
+      </section>
 
-      <TaskList
-        tasks={tasks}
-        toggleTask={toggleTask}
-        deleteTask={deleteTask}
-      />
-    </div>
+      <section>
+        <TaskList
+          tasks={tasks}
+          toggleTask={toggleTask}
+          deleteTask={deleteTask}
+        />
+      </section>
+    </main>
 
-  );
+  </div>
+);
 }
 
 export default App;
